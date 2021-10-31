@@ -5,7 +5,6 @@
  */
 package cz.upce.fei.inptp.zz.entity;
 
-import java.io.DataInput;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
