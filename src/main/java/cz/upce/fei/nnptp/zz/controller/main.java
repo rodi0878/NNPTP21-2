@@ -26,8 +26,7 @@ public class main {
         CryptoFile.writeFile(new File("test.txt"), "password",  contents);
         
         String read = CryptoFile.readFile(new File("test.txt"), "password");
-        System.out.println(read);
-        
+        System.out.println(read);     
     }
    
 }
