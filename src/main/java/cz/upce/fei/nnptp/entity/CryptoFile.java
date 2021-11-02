@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cz.upce.fei.nnptp.zz.entity;
+package cz.upce.fei.nnptp.entity;
 
-import java.io.DataInput;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -31,23 +30,24 @@ import javax.crypto.spec.SecretKeySpec;
  * @author Roman
  */
 public class CryptoFile {
-    
+
+    private static final String CIPHER_INSTANCE = "DES/ECB/PKCS5Padding";
+    private static final String ENCRYPTING_ALGORITHM = "DES";
+
     public static String readFile(File file, String password) {
-        FileInputStream fis = null;
-        try {
-            fis = new FileInputStream(file);
+        try (FileInputStream fileInputStream = new FileInputStream(file)) {
             // TODO...
-            Cipher c = Cipher.getInstance("DES/ECB/PKCS5Padding");
-            CipherInputStream cis = new CipherInputStream(fis, c);
-            SecretKey secretKey = new SecretKeySpec(password.getBytes(), "DES");
-            c.init(Cipher.DECRYPT_MODE, secretKey);
-            
-            DataInputStream dis = new DataInputStream(cis);
-            String r = dis.readUTF();
-            dis.close();
-            c.doFinal();
-            
-            return r;        
+            Cipher cipher = Cipher.getInstance(CIPHER_INSTANCE);
+            CipherInputStream cipherInputStream = new CipherInputStream(fileInputStream, cipher);
+            SecretKey secretKey = new SecretKeySpec(password.getBytes(), ENCRYPTING_ALGORITHM);
+            cipher.init(Cipher.DECRYPT_MODE, secretKey);
+
+            DataInputStream dataInputStream = new DataInputStream(cipherInputStream);
+            String result = dataInputStream.readUTF();
+            dataInputStream.close();
+            cipher.doFinal();
+
+            return result;
         } catch (FileNotFoundException ex) {
             Logger.getLogger(CryptoFile.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NoSuchAlgorithmException ex) {
@@ -62,30 +62,22 @@ public class CryptoFile {
             Logger.getLogger(CryptoFile.class.getName()).log(Level.SEVERE, null, ex);
         } catch (BadPaddingException ex) {
             Logger.getLogger(CryptoFile.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                fis.close();
-            } catch (IOException ex) {
-                Logger.getLogger(CryptoFile.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
-        
+
         return null;
     }
-    
-    public static void  writeFile(File file, String password, String cnt) {
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(file);
-            Cipher c = Cipher.getInstance("DES/ECB/PKCS5Padding");
-            CipherOutputStream cis = new CipherOutputStream(fos, c);
-            SecretKey secretKey = new SecretKeySpec(password.getBytes(), "DES");
-            c.init(Cipher.ENCRYPT_MODE, secretKey);
-            
-            DataOutputStream dos = new DataOutputStream(cis);
-            dos.writeUTF(cnt);
-            dos.close();
-            c.doFinal();
+
+    public static void writeFile(File file, String password, String cnt) {
+        try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
+            Cipher cipher = Cipher.getInstance(CIPHER_INSTANCE);
+            CipherOutputStream cipherInputStream = new CipherOutputStream(fileOutputStream, cipher);
+            SecretKey secretKey = new SecretKeySpec(password.getBytes(), ENCRYPTING_ALGORITHM);
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+
+            DataOutputStream dataOutputStream = new DataOutputStream(cipherInputStream);
+            dataOutputStream.writeUTF(cnt);
+            dataOutputStream.close();
+            cipher.doFinal();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(CryptoFile.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NoSuchAlgorithmException ex) {
@@ -100,13 +92,6 @@ public class CryptoFile {
             Logger.getLogger(CryptoFile.class.getName()).log(Level.SEVERE, null, ex);
         } catch (BadPaddingException ex) {
             Logger.getLogger(CryptoFile.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                fos.close();
-            } catch (IOException ex) {
-                Logger.getLogger(CryptoFile.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
     }
-    
 }

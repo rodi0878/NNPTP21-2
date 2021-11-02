@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cz.upce.fei.nnptp.zz.entity;
+package cz.upce.fei.nnptp.entity;
 
 import java.util.HashMap;
 
@@ -43,14 +43,12 @@ public class Password {
         return parameters;
     }
 
-    boolean hasParameter(String TITLE) {
-        return parameters.containsKey(TITLE);
+    boolean hasParameter(String key) {
+        return parameters.containsKey(key);
     }
-    
-    public Parameter getParameter(String t) {
-        return parameters.get(t);
+
+    public Parameter getParameter(String key) {
+        return parameters.get(key);
     }
-    
-    
 
 }
