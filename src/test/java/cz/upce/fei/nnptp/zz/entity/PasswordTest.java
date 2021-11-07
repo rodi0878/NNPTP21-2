@@ -38,11 +38,13 @@ public class PasswordTest {
     }
 
     @Test
-    public void testSomeMethod() {
-        // TODO review the generated test code and remove the default call to fail.
-        Password ppwd = new Password(0, "pass");
-        
-        assertTrue(ppwd.getPassword().equals("pass"));
+    public void testGetPassword() {
+        String expectedPassword = "pass";
+        Password password = new Password(0, expectedPassword);
+
+        String result = password.getPassword();
+
+        assertEquals(expectedPassword, result);
     }
     
 }
