@@ -10,6 +10,9 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import java.util.HashMap;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -44,5 +47,13 @@ public class PasswordTest {
         
         assertTrue(ppwd.getPassword().equals("pass"));
     }
-    
+
+    @Test
+    void hasParameter() {
+        HashMap<String,Parameter> parameters = new HashMap<>();
+        parameters.put("title",new Parameter.TextParameter("Password1"));
+        Password password = new Password(0,"password",parameters);
+        assertTrue(password.hasParameter("title"));
+        assertFalse(password.hasParameter("test"));
+    }
 }
