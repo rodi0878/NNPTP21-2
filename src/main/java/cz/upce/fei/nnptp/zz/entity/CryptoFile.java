@@ -9,7 +9,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.InvalidKeyException;
@@ -31,12 +30,15 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public class CryptoFile {
 
+    private static final String ALGORITHM_NAME = "DES";
+    private static final String TRANSFORMATION_NAME = "DES/ECB/PKCS5Padding";
+    
     public static String readFile(File file, String password) {
         FileInputStream fileInputStream = null;
-        SecretKey secretKey = new SecretKeySpec(password.getBytes(), "DES");
+        SecretKey secretKey = new SecretKeySpec(password.getBytes(), ALGORITHM_NAME);
         try {
             fileInputStream = new FileInputStream(file);
-            Cipher cipher = Cipher.getInstance("DES/ECB/PKCS5Padding");
+            Cipher cipher = Cipher.getInstance(TRANSFORMATION_NAME);
             CipherInputStream cipherInputStream = new CipherInputStream(fileInputStream, cipher);
             cipher.init(Cipher.DECRYPT_MODE, secretKey);
 
@@ -64,10 +66,10 @@ public class CryptoFile {
 
     public static void writeFile(File file, String password, String cnt) {
         FileOutputStream fileOutputStream = null;
-        SecretKey secretKey = new SecretKeySpec(password.getBytes(), "DES");
+        SecretKey secretKey = new SecretKeySpec(password.getBytes(), ALGORITHM_NAME);
         try {
             fileOutputStream = new FileOutputStream(file);
-            Cipher cipher = Cipher.getInstance("DES/ECB/PKCS5Padding");
+            Cipher cipher = Cipher.getInstance(TRANSFORMATION_NAME);
             CipherOutputStream cipherOutputStream = new CipherOutputStream(fileOutputStream, cipher);
             cipher.init(Cipher.ENCRYPT_MODE, secretKey);
 
