@@ -9,7 +9,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class PasswordDatabaseTest {
+public class PasswordDatabaseTest {
 
     public PasswordDatabaseTest(){
     }
