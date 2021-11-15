@@ -15,23 +15,23 @@ class PasswordDatabaseTest {
     }
 
     @BeforeAll
-    static void beforeAll() {
+    public static void beforeAll() {
     }
 
     @AfterAll
-    static void afterAll() {
+    public static void afterAll() {
     }
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
     }
 
     @AfterEach
-    void tearDown() {
+    public void tearDown() {
     }
 
     @Test
-    void save() {
+    public void save() {
 
         List<Password> passwords = new ArrayList<>();
         passwords.add(new Password(0,"password1"));
