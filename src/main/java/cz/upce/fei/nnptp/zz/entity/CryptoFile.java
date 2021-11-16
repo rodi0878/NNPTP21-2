@@ -32,12 +32,10 @@ public class CryptoFile {
 
     private static final String ALGORITHM_NAME = "DES";
     private static final String TRANSFORMATION_NAME = "DES/ECB/PKCS5Padding";
-    
+
     public static String readFile(File file, String password) {
-        FileInputStream fileInputStream = null;
         SecretKey secretKey = new SecretKeySpec(password.getBytes(), ALGORITHM_NAME);
-        try {
-            fileInputStream = new FileInputStream(file);
+        try (FileInputStream fileInputStream = new FileInputStream(file)) {
             Cipher cipher = Cipher.getInstance(TRANSFORMATION_NAME);
             CipherInputStream cipherInputStream = new CipherInputStream(fileInputStream, cipher);
             cipher.init(Cipher.DECRYPT_MODE, secretKey);
@@ -49,45 +47,25 @@ public class CryptoFile {
             cipher.doFinal();
 
             return result;
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IOException | IllegalBlockSizeException | BadPaddingException ex) {
-            Logger.getLogger(CryptoFile.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                if (fileInputStream != null) {
-                    fileInputStream.close();
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(CryptoFile.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IOException | IllegalBlockSizeException | BadPaddingException exception) {
+            Logger.getLogger(CryptoFile.class.getName()).log(Level.SEVERE, null, exception);
         }
-
         return null;
     }
 
-    public static void writeFile(File file, String password, String cnt) {
-        FileOutputStream fileOutputStream = null;
+    public static void writeFile(File file, String password, String contents) {
         SecretKey secretKey = new SecretKeySpec(password.getBytes(), ALGORITHM_NAME);
-        try {
-            fileOutputStream = new FileOutputStream(file);
+        try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
             Cipher cipher = Cipher.getInstance(TRANSFORMATION_NAME);
             CipherOutputStream cipherOutputStream = new CipherOutputStream(fileOutputStream, cipher);
             cipher.init(Cipher.ENCRYPT_MODE, secretKey);
 
             try (DataOutputStream dataOutputStream = new DataOutputStream(cipherOutputStream)) {
-                dataOutputStream.writeUTF(cnt);
+                dataOutputStream.writeUTF(contents);
             }
             cipher.doFinal();
-        } catch (IllegalBlockSizeException | BadPaddingException | IOException | InvalidKeyException | NoSuchPaddingException | NoSuchAlgorithmException ex) {
-            Logger.getLogger(CryptoFile.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                if (fileOutputStream != null) {
-                    fileOutputStream.close();
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(CryptoFile.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        } catch (IllegalBlockSizeException | BadPaddingException | IOException | InvalidKeyException | NoSuchPaddingException | NoSuchAlgorithmException exception) {
+            Logger.getLogger(CryptoFile.class.getName()).log(Level.SEVERE, null, exception);
         }
     }
-
 }
