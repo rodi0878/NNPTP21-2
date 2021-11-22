@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class PasswordDatabaseTest {
 
-    public PasswordDatabaseTest(){
+    public PasswordDatabaseTest() {
     }
 
     @BeforeAll
@@ -31,22 +31,51 @@ public class PasswordDatabaseTest {
     }
 
     @Test
-    public void save() {
+    public void testSave() {
 
         List<Password> passwords = new ArrayList<>();
-        passwords.add(new Password(0,"password1"));
-        passwords.add(new Password(1,"password2"));
+        passwords.add(new Password(0, "password1"));
+        passwords.add(new Password(1, "password2"));
 
         String expectedPasswordsInString = new JSON().toJson(passwords);
 
-        PasswordDatabase passwordDatabase = new PasswordDatabase(new File("password_database_test.txt"),"password");
+        PasswordDatabase passwordDatabase = new PasswordDatabase(new File("password_database_test.txt"), "password");
         passwordDatabase.add(passwords.get(0));
         passwordDatabase.add(passwords.get(1));
 
         passwordDatabase.save();
 
-        String passwordsInString = CryptoFile.readFile(new File("password_database_test.txt"),"password");
+        String passwordsInString = CryptoFile.readFile(new File("password_database_test.txt"), "password");
 
-        assertEquals(expectedPasswordsInString,passwordsInString);
+        assertEquals(expectedPasswordsInString, passwordsInString);
+    }
+
+    @Test
+    public void testFindEntryByTitle() {
+        PasswordDatabase passwordDatabase = new PasswordDatabase(null, "");
+
+        HashMap<String, Parameter> parametersForPassword1 = new HashMap<>();
+        parametersForPassword1.put(Parameter.StandardizedParameters.DESCRIPTION, new Parameter.TextParameter("TextParameter1"));
+        parametersForPassword1.put(Parameter.StandardizedParameters.TITLE, new Parameter.TextParameter("TextParameter2"));
+
+        HashMap<String, Parameter> parametersForPassword2 = new HashMap<>();
+        parametersForPassword2.put(Parameter.StandardizedParameters.TITLE, new Parameter.TextParameter("TextParameter3"));
+        parametersForPassword2.put(Parameter.StandardizedParameters.WEBSITE, new Parameter.TextParameter("TextParameter4"));
+
+        Password password1 = new Password(0, "password0", parametersForPassword1);
+        Password password2 = new Password(1, "password1", parametersForPassword2);
+
+        passwordDatabase.add(password1);
+        passwordDatabase.add(password2);
+
+        Password result1 = passwordDatabase.findEntryByTitle("TextParameter2");
+        assertEquals(password1, result1);
+
+        Password result2 = passwordDatabase.findEntryByTitle("TextParameter3");
+        assertEquals(password2, result2);
+
+        Password result3 = passwordDatabase.findEntryByTitle("TextParameter1");
+        assertNull(result3);
+
     }
 }
