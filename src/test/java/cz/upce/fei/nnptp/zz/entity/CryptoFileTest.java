@@ -6,33 +6,36 @@
 package cz.upce.fei.nnptp.zz.entity;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+
 /**
  *
  * @author Roman
  */
 public class CryptoFileTest {
-    
+
     public CryptoFileTest() {
     }
-    
+
     @BeforeAll
     public static void setUpClass() {
     }
-    
+
     @AfterAll
     public static void tearDownClass() {
     }
-    
+
     @BeforeEach
     public void setUp() {
     }
-    
+
     @AfterEach
     public void tearDown() {
     }
@@ -42,25 +45,48 @@ public class CryptoFileTest {
      */
     @Test
     public void testReadFile() {
-        System.out.println("readFile");
-        File file = null;
-        String password = "";
-        String expResult = "";
-        String result = "";
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
+        //Password has to have 8 symbols
+        String password = "password";
+        String wrongPassword = "WrongPas";
+        String content = "This is content of cryptoFile";
+        File file = new File("testReadFile.txt");
+
+        CryptoFile.writeFile(file, password, content);
+
+        String result = CryptoFile.readFile(file, password);
+
+        assertEquals(content, result);
+
+        String resultWrong = CryptoFile.readFile(file, wrongPassword);
+
+        assertNull(resultWrong);
     }
 
     /**
      * Test of writeFile method, of class CryptoFile.
      */
     @Test
-    public void testWriteFile() {
-        System.out.println("writeFile");
-        File file = null;
-        String password = "";
-        String cnt = "";
-        // TODO review the generated test code and remove the default call to fail.
+    public void testWriteFile() throws FileNotFoundException {
+        //Password has to have 8 symbols
+        String password = "password";
+        String cipheredContent = "ę(ÝßÇüÔ¬rµď•ÓĹś“‡ç~/§I%a°’?";
+        String content = "This is content of cryptoFile";
+        File file = new File("testWriteFile.txt");
+
+        CryptoFile.writeFile(file, password, content);
+
+        Scanner sc = new Scanner(file);
+        String fileResult = "";
+        while (sc.hasNextLine()) {
+            fileResult += sc.nextLine();
+        }
+
+        assertEquals(cipheredContent, fileResult);
+
+        String result = CryptoFile.readFile(file, password);
+
+        assertEquals(content, result);
+
     }
-    
+
 }
