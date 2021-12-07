@@ -82,21 +82,20 @@ public class CryptoFileTest {
 
         CryptoFile.writeFile(file, password, content);
 
-        String fileResult = "";
-        try (Scanner sc = new Scanner(file)) {
-            fileResult = "";
-            while (sc.hasNextLine()) {
-                fileResult += sc.nextLine();
-            }
+        String fileResult = null;
+        try {
+            fileResult = new String(Files.readAllBytes(Paths.get("testWriteFile.txt")));
+        } catch (IOException ex) {
+            Logger.getLogger(CryptoFileTest.class.getName()).log(Level.SEVERE, null, ex);
         }
+
         assertEquals(cipheredContent, fileResult);
 
         String result = CryptoFile.readFile(file, password);
-
         assertEquals(content, result);
-        
+
         file.delete();
-        
+
     }
 
 }
