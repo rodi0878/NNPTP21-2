@@ -7,7 +7,12 @@ package cz.upce.fei.nnptp.zz.entity;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,7 +55,6 @@ public class CryptoFileTest {
         String wrongPassword = "WrongPas";
         String content = "This is content of cryptoFile";
         File file = new File("testReadFile.txt");
-
         CryptoFile.writeFile(file, password, content);
 
         String result = CryptoFile.readFile(file, password);
@@ -60,6 +64,9 @@ public class CryptoFileTest {
         String resultWrong = CryptoFile.readFile(file, wrongPassword);
 
         assertNull(resultWrong);
+
+        File fileDeleted = new File("testReadFile.txt");
+        fileDeleted.delete();
     }
 
     /**
@@ -75,18 +82,21 @@ public class CryptoFileTest {
 
         CryptoFile.writeFile(file, password, content);
 
-        Scanner sc = new Scanner(file);
-        String fileResult = "";
-        while (sc.hasNextLine()) {
-            fileResult += sc.nextLine();
+        String fileResult;
+        try (Scanner sc = new Scanner(file)) {
+            fileResult = "";
+            while (sc.hasNextLine()) {
+                fileResult += sc.nextLine();
+            }
         }
-
         assertEquals(cipheredContent, fileResult);
 
         String result = CryptoFile.readFile(file, password);
 
         assertEquals(content, result);
-
+        
+        file.delete();
+        
     }
 
 }

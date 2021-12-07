@@ -48,9 +48,8 @@ public class CryptoFile {
 
             return result;
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IOException | IllegalBlockSizeException | BadPaddingException exception) {
-            Logger.getLogger(CryptoFile.class.getName()).log(Level.SEVERE, null, exception);
+            return null;
         }
-        return null;
     }
 
     public static void writeFile(File file, String password, String contents) {
