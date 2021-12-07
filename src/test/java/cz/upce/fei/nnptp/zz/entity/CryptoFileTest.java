@@ -5,11 +5,16 @@
  */
 package cz.upce.fei.nnptp.zz.entity;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -73,7 +78,7 @@ public class CryptoFileTest {
      * Test of writeFile method, of class CryptoFile.
      */
     @Test
-    public void testWriteFile() throws FileNotFoundException {
+    public void testWriteFile() throws FileNotFoundException, IOException {
         //Password has to have 8 symbols
         String password = "password";
         String cipheredContent = "ę(ÝßÇüÔ¬rµď•ÓĹś“‡ç~/§I%a°’?";
@@ -82,13 +87,7 @@ public class CryptoFileTest {
 
         CryptoFile.writeFile(file, password, content);
 
-        String fileResult = null;
-        try {
-            fileResult = new String(Files.readAllBytes(Paths.get("testWriteFile.txt")));
-        } catch (IOException ex) {
-            Logger.getLogger(CryptoFileTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+        String fileResult = readFileInString("testWriteFile.txt");
         assertEquals(cipheredContent, fileResult);
 
         String result = CryptoFile.readFile(file, password);
@@ -98,4 +97,17 @@ public class CryptoFileTest {
 
     }
 
+    private static String readFileInString(String filePath) {
+        StringBuilder contentBuilder = new StringBuilder();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath))) {
+
+            String currentLine;
+            while ((currentLine = bufferedReader.readLine()) != null) {
+                contentBuilder.append(currentLine);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return contentBuilder.toString();
+    }
 }
