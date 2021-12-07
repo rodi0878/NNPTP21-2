@@ -7,9 +7,11 @@ package cz.upce.fei.nnptp.zz.entity;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -99,7 +101,7 @@ public class CryptoFileTest {
 
     private static String readFileInString(String filePath) {
         StringBuilder contentBuilder = new StringBuilder();
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath))) {
+        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(filePath), "Windows-1250"))) {
 
             String currentLine;
             while ((currentLine = bufferedReader.readLine()) != null) {
