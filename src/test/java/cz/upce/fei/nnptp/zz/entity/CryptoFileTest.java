@@ -82,7 +82,7 @@ public class CryptoFileTest {
 
         CryptoFile.writeFile(file, password, content);
 
-        String fileResult;
+        String fileResult = "";
         try (Scanner sc = new Scanner(file)) {
             fileResult = "";
             while (sc.hasNextLine()) {
