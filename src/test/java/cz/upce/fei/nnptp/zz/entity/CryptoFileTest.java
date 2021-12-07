@@ -107,9 +107,11 @@ public class CryptoFileTest {
             while ((currentLine = bufferedReader.readLine()) != null) {
                 contentBuilder.append(currentLine);
             }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         return contentBuilder.toString();
     }
 }
