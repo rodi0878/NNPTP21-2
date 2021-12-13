@@ -5,6 +5,7 @@
  */
 package cz.upce.fei.nnptp.zz.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,6 +33,17 @@ public class JSON {
     }
     
     public List<Password> fromJson(String json) {
-        throw new RuntimeException("NYI");
+        List<Password> passwords = new ArrayList<>();
+        String[] jsonParts = json.split("\\{|},|}");
+        for (int i = 0; i < jsonParts.length; i++) {
+            if(!jsonParts[i].equals("[") && !jsonParts[i].equals("]") && !jsonParts[i].isEmpty()){
+                String[] passwordParts = jsonParts[i].split(":|,");
+                int passwordId = Integer.parseInt(passwordParts[1]);
+                String passwordString = passwordParts[3].substring(1,passwordParts[3].length()-1);
+                Password password = new Password(passwordId, passwordString);
+                passwords.add(password);
+            }
+        }
+        return passwords;
     }
 }
