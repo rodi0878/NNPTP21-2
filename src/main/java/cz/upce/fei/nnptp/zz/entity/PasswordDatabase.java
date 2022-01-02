@@ -25,9 +25,14 @@ public class PasswordDatabase {
         passwords = new ArrayList<>();
     }
     
-    public void load() {
-        // TODO: use JSON and CryptoFile to load
-        // TODO: throw exceptions when error
+    public void load(){
+        try {
+            String passwordInJSON = CryptoFile.readFile(file, password);
+            System.out.println(passwordInJSON);
+            passwords = new JSON().fromJson(passwordInJSON);
+        }catch (Exception e){
+            throw new RuntimeException(e.getMessage());
+        }
     }
     
     public void save() {
@@ -51,5 +56,13 @@ public class PasswordDatabase {
             }
         }
         return null;
-    }    
+    }
+
+    //for testing
+    public Password findByIndex(int index){
+        if (index < passwords.size()){
+            return passwords.get(index);
+        }
+        return null;
+    }
 }

@@ -78,4 +78,27 @@ public class PasswordDatabaseTest {
         assertNull(result3);
 
     }
+
+    @Test
+    public void load() {
+        List<Password> passwords = new ArrayList<>();
+        passwords.add(new Password(0, "password1"));
+        passwords.add(new Password(1, "password2"));
+
+        PasswordDatabase passwordDatabase1 = new PasswordDatabase(new File("password_database_test.txt"), "password");
+        passwordDatabase1.add(passwords.get(0));
+        passwordDatabase1.add(passwords.get(1));
+
+        Password expectedPassword = passwordDatabase1.findByIndex(0);
+        passwordDatabase1.save();
+
+        PasswordDatabase passwordDatabase2 = new PasswordDatabase(new File("password_database_test.txt"), "password");
+        passwordDatabase2.load();
+        Password resultPassword = passwordDatabase2.findByIndex(0);
+
+        String expectedResult = expectedPassword.getId()+":"+expectedPassword.getPassword();
+        String result = resultPassword.getId()+":"+resultPassword.getPassword();
+
+        assertEquals(expectedResult, result);
+    }
 }
